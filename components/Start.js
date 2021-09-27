@@ -1,5 +1,8 @@
 import React from 'react';
-import { View, Text, Alert, ImageBackground, Platform } from 'react-native';
+import { View, Text, Alert, ImageBackground, Platform, 
+    StyleSheet, TextInput, TouchableOpacity, Pressable, 
+    KeyboardAvoidingView } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 // background image
 const image = require('../img/Background.png');
@@ -8,26 +11,30 @@ export default class start extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
+            username: '',
             backgroundColor: '',
         };
     }
 
     // check for username
     onGoToChat = (username, backgroundColor) => {
-        if(name === '') {
-            return Alert.alert('Please enter your name.');
+        if(username == '') {
+            return Alert.alert('Please enter username.');
         }
         this.props.navigation.navigate('Chat', {
-            name: this.props.route.params.name,
+            username: `${username}`,
             backgroundColor: `${backgroundColor}`,
         });
     }
 
-    render () {
-        let name = this.props.route.params.name;
+    componentDidMount() {
+        let name = this.props.route.params;
 
         this.props.navigation.setOptions({ title: name });
+    }
+
+    render () {
+        // const setColor = this.state.backgroundColor;
 
         return(
             <View style={styles.container}>
@@ -36,25 +43,30 @@ export default class start extends React.Component {
                     resizeMode="cover"
                     style={{width: '100%', height: '100%', resizeMode: 'cover '}}
                 >
+                    
+                    {/* Title */}
                     <Text style={styles.title}>
                         Chat-Me
                     </Text>
+
                     <View style={styles.box1}>
-                        <View style={styles.nameSection}>
+                        <View style={styles.nameSection} >
                             <Icon 
                                 style={styles.icon}
                                 name='person-outline'
                                 color='#757083'
                                 size={25}
                             />
+
                             {/* username */}
                             <TextInput
                                 style={styles.input}
-                                onChangeText={(name) => this.setState({ name })}
-                                value={this.state.name}
-                                placeholder='Type Your Name'>
-                            </TextInput>
-                        </View>
+                                onChangeText={(username) => this.setState({ username })}
+                                value={this.state.username}
+                                placeholder='Type Your Name' 
+                            />
+                        </View>{/* end of nameSection */} 
+
                         {/* choose background color */}
                         <View style={styles.backgroundChoice}>
                             <Text style={styles.backgroundColor}>
@@ -69,7 +81,7 @@ export default class start extends React.Component {
                                     accissibilityHint='Lets you choose to send an image or your geolocation'
                                     accessibilityRole='button'
                                     style={[styles.backgroundIcon, styles.color1, this.state.backgroundColor === '#090c08' ? styles.border : null ]}
-                                    onPress={() => this.setState({backgroundColor: '#090c08'})}
+                                    onPress={() => this.setState({ backgroundColor: '#090c08'})}
                                 />
 
                                 <TouchableOpacity
@@ -77,8 +89,8 @@ export default class start extends React.Component {
                                     accessibilityLabel='More options'
                                     accissibilityHint='Lets you choose to send an image or your geolocation'
                                     accessibilityRole='button'
-                                    style={[styles.backgroundIcon, styles.color1, this.state.backgroundColor === '#474056' ? styles.border : null ]}
-                                    onPress={() => this.setState({backgroundColor: '#474056'})}
+                                    style={[styles.backgroundIcon, styles.color2, this.state.backgroundColor === '#474056' ? styles.border : null ]}
+                                    onPress={() => this.setState({ backgroundColor: '#474056'})}
                                 />
 
                                 <TouchableOpacity
@@ -86,8 +98,8 @@ export default class start extends React.Component {
                                     accessibilityLabel='More options'
                                     accissibilityHint='Lets you choose to send an image or your geolocation'
                                     accessibilityRole='button'
-                                    style={[styles.backgroundIcon, styles.color1, this.state.backgroundColor === '#8a95a5' ? styles.border : null ]}
-                                    onPress={() => this.setState({backgroundColor: '#8a95a5'})}
+                                    style={[styles.backgroundIcon, styles.color3, this.state.backgroundColor === '#8a95a5' ? styles.border : null ]}
+                                    onPress={() => this.setState({ backgroundColor: '#8a95a5'})}
                                 />
 
                                 <TouchableOpacity
@@ -95,28 +107,34 @@ export default class start extends React.Component {
                                     accessibilityLabel='More options'
                                     accissibilityHint='Lets you choose to send an image or your geolocation'
                                     accessibilityRole='button'
-                                    style={[styles.backgroundIcon, styles.color1, this.state.backgroundColor === '#b9c6ae' ? styles.border : null ]}
-                                    onPress={() => this.setState({backgroundColor: '#b9c6ae'})}
+                                    style={[styles.backgroundIcon, styles.color4, this.state.backgroundColor === '#b9c6ae' ? styles.border : null ]}
+                                    onPress={() => this.setState({ backgroundColor: '#b9c6ae'})}
                                 />
-                            </View> {/* end of backgroundColor options */}
-                        </View> {/* end of choose backgroundColor choice */}
+                            </View> 
+                             {/* end of backgroundColor options */}
+                        </View> 
+                        {/* end of choose backgroundColor choice */}
 
                         {/* pressable is a button you can add css */}
                         <Pressable
+                            accessible={true}
+                            accessibilityLabel='Start Chatting'
+                            accessibilityHint='Takes you to the chat screen'
                             style={styles.chatButton}
-                            onPress={() => this.onGoToChat(this.state.name, this.state.backgroundColor)}
+                            onPress={() => this.onGoToChat(this.state.username, this.state.backgroundColor)}
                         >
-                            <Text>
+                            <Text style={styles.chatText}>
                                 Start Chatting
                             </Text>
                         </Pressable>
 
                         { Platform.OS === 'android' ? <KeyboardAvoidingView behavior='height' keyboardVerticalOffset={100} /> : null } 
                     
-                    </View> {/* end of box1 */}
+                    </View> 
+                    {/* end of box1 */}
                 </ImageBackground>
             </View>
-        )
+        );
     }
 }
 
