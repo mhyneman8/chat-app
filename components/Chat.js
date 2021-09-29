@@ -2,8 +2,13 @@ import React from 'react';
 import { View, Text, Platform, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 
+// import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+
 const firebase = require('firebase');
 require('firebase/firestore');
+
+import { initializeApp } from 'firebase/app';
 
 export default class Chat extends React.Component {
     constructor(props) {
@@ -19,11 +24,11 @@ export default class Chat extends React.Component {
             measurementId: "G-JZBJ5SE3Q1"
         }
 
-        const app = initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
         
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        // if (!firebase.apps.length) {
+        //     firebase.initializeApp(firebaseConfig);
+        // }
         //   firebase.initializeApp({
         //     firebaseConfig
             // apiKey: "AIzaSyBvLZFLnmRtqe530HENKdslztC9OFJTIf4",
