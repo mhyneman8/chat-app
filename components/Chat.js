@@ -2,17 +2,9 @@ import React from 'react';
 import { View, Text, Platform, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
-
-// const firestore = firebase.firestore();
-
-// const firebase = require('firebase');
+const firebase = require('firebase');
 require('firebase/firestore');
+
 
 export default class Chat extends React.Component {
     constructor(props) {
@@ -28,11 +20,25 @@ export default class Chat extends React.Component {
             measurementId: "G-JZBJ5SE3Q1"
         }
 
-        if (!firebase.apps.length) {
-          firebase.initializeApp({
-            firebaseConfig
-          });
-        }
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        
+        if (firebase.apps.length === 0) {
+            app = firebase.initializeApp(firebaseConfig);
+        } else 
+        //   firebase.initializeApp({
+        //     firebaseConfig
+            // apiKey: "AIzaSyBvLZFLnmRtqe530HENKdslztC9OFJTIf4",
+            // authDomain: "chat-app-3ec44.firebaseapp.com",
+            // projectId: "chat-app-3ec44",
+            // storageBucket: "chat-app-3ec44.appspot.com",
+            // messagingSenderId: "252452088351",
+            // appId: "1:252452088351:web:df65ee8772009c82d1032a",
+            // measurementId: "G-JZBJ5SE3Q1"
+        //   });
+        // }
         // reference messages collection in firebase
         this.referenceChatMessages = firebase.firestore().collection('messages');
 
