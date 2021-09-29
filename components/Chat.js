@@ -5,7 +5,6 @@ import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 const firebase = require('firebase');
 require('firebase/firestore');
 
-
 export default class Chat extends React.Component {
     constructor(props) {
         super(props);
@@ -21,13 +20,10 @@ export default class Chat extends React.Component {
         }
 
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
-
         
-        if (firebase.apps.length === 0) {
-            app = firebase.initializeApp(firebaseConfig);
-        } else 
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         //   firebase.initializeApp({
         //     firebaseConfig
             // apiKey: "AIzaSyBvLZFLnmRtqe530HENKdslztC9OFJTIf4",
