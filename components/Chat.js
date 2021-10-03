@@ -118,9 +118,6 @@ export default class Chat extends React.Component {
     }
 
     render() {
-        console.ignoredYellowBox = [
-            'Setting a timer'
-          ]
         return (
             <View style={{flex: 1, 
                 backgroundColor: this.props.route.params.backgroundColor }}

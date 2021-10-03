@@ -35,10 +35,6 @@ export default class start extends React.Component {
     }
 
     render () {
-        console.ignoredYellowBox = [
-            'Setting a timer'
-          ]
-
         return(
             <View style={styles.container}>
                 <ImageBackground

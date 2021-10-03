@@ -7,14 +7,15 @@ import 'react-native-gesture-handler';
 import Start from './components/Start';
 import Chat from './components/Chat';
 
+// ignore setting a time warning
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Setting a timer']);
+
 const Stack = createStackNavigator();
-
-
 
 export default class App extends React.Component {
 
   render() {
-
     return (
       <NavigationContainer>
         <Stack.Navigator 
