@@ -15,6 +15,7 @@ export default class start extends React.Component {
             backgroundColor: '',
         };
     }
+    
 
     // check for username
     onGoToChat = (username, backgroundColor) => {
@@ -22,8 +23,8 @@ export default class start extends React.Component {
             return Alert.alert('Please enter username.');
         }
         this.props.navigation.navigate('Chat', {
-            username: `${username}`,
-            backgroundColor: `${backgroundColor}`,
+            username: this.state.username,
+            backgroundColor: this.state.backgroundColor,
         });
     }
 
@@ -34,7 +35,9 @@ export default class start extends React.Component {
     }
 
     render () {
-        // const setColor = this.state.backgroundColor;
+        console.ignoredYellowBox = [
+            'Setting a timer'
+          ]
 
         return(
             <View style={styles.container}>
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
     box1: {
         width: '88%',
         height: '44%',
-        minHeight: 200,
+        minHeight: 320,
         backgroundColor: 'white',
         alignItems: 'center',
         marginLeft: 25,
