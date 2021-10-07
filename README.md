@@ -30,8 +30,10 @@ cd chat-app
 #### Install dependencies
 npm install
 
-Set up a Firestore Database at https://firebase.google.com/. Details on how to set up the database can be found in the Firebase documentation - https://firebase.google.com/docs 
+Set up a [Firestore Database] (https://firebase.google.com/). Details on how to set up the database can be found in the Firebase [documentation](https://firebase.google.com/docs)
 You will need to replace the firebaseConfig variable in Chat.js with your own database configuration.
+
+You also need to set up an Expo account. Check out the [documentation] (https://docs.expo.dev/get-started/installation/)
 
 #### Run using expo
   expo start
