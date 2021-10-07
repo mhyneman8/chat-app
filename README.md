@@ -48,7 +48,7 @@ You will need to replace the firebaseConfig variable in Chat.js with your own da
   
 ## Screenshots
 
-![ChatScreen Screenshot](https://github.com/mhyneman8/chat-app/raw/master/img/ChatScreen.jpg)
+![ChatScreen Screenshot](https://github.com/mhyneman8/chat-app/raw/master/img/ChatScreen.jpg | width=100)
 ![HomeScreen Screenshot]('img/HomeScreen.jpg')
 
   
