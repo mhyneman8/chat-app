@@ -4,8 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
 
+// components
 import Start from './components/Start';
 import Chat from './components/Chat';
+// import CustomActions from './CustomActions';
 
 // ignore setting a time warning
 import { LogBox } from 'react-native';

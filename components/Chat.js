@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, Text, Platform, StyleSheet, KeyboardAvoidingView, Alert } from 'react-native';
+import { View, Platform, StyleSheet, KeyboardAvoidingView, Alert } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+
+import MapView from 'react-native-maps';
+import CustomActions from './CustomActions';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -18,8 +21,11 @@ export default class Chat extends React.Component {
             user: {
                 _id: '',
                 username: '',
+                avatar: '',
             },
             isConnected: false,
+            image: null,
+            location: null,
         };
         
         if (!firebase.apps.length) {
@@ -35,9 +41,10 @@ export default class Chat extends React.Component {
         }
         // reference messages collection in firebase
         this.referenceMessages = firebase.firestore().collection('messages');
+        // set up initial user's messages as null
         this.referenceMessageUser = null;
     }
-
+    // client side get messages from storage
     async getMessages() {
         let messages = '';
         let uid = '';
@@ -54,6 +61,7 @@ export default class Chat extends React.Component {
         }
     };
 
+    // updates messages state
     onCollectionUpdate = (querySnapshot) => {
         const messages = [];
         querySnapshot.forEach((doc) => {
@@ -63,6 +71,9 @@ export default class Chat extends React.Component {
                 text: data.text,
                 createdAt: data.createdAt.toDate(),
                 user: data.user,
+                // fields are optional. Null if empty
+                image: data.image || null,
+                location: data.location || null,
             });
         });
         this.setState({
@@ -70,17 +81,21 @@ export default class Chat extends React.Component {
         });
     };
 
+    // add message to firebase
     addMessage() {
         const message = this.state.messages[0];
         this.referenceMessages.add({
             uid: this.state.uid,
             _id: message._id,
-            text: message.text,
+            text: message.text || null,
             createdAt: message.createdAt,
-            user: message.user
+            user: message.user,
+            image: message.image || null,
+            location: message.location || null,
         });
     }
 
+    // client-side storage
     async saveMessages() {
         try {
             await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
@@ -100,6 +115,7 @@ export default class Chat extends React.Component {
         }
     }
 
+    // chat message is sent
     onSend(messages = []) {
         this.setState(
             (previousState) => ({
@@ -129,6 +145,7 @@ export default class Chat extends React.Component {
         )
     }
 
+    // render inputToolbar when online
     renderInputToolbar(props) {
         if (this.state.isConnected == false) {
         } else {
@@ -139,6 +156,59 @@ export default class Chat extends React.Component {
             );
         }
     }
+
+    pickImage = async () => {
+        const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+
+        if(status === 'granted') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: 'Images',
+            }).catch(error => console.log(error));
+
+            if(!result.cancelled) {
+                this.setState({
+                    image: result
+                });
+            }
+        }
+    }
+
+    getLocation = async () => {
+        const { status } = await Permissions.askAsync(Permissions.LOCATION);
+        
+        if(status === 'granted') {
+            let result = await Location.getCurrentPositionAsync({});
+
+            if (result) {
+                this.setState({
+                    location: result
+                });
+            }
+        }
+    }
+
+    // returns MapView showing location
+    renderCustomView(props) {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return (
+                <MapView
+                    showUserLocation={true}
+                    style={styles.mapView}
+                    region={{longitude: Number(currentMessage.location.longitude), 
+                        latitude: Number(currentMessage.location.latitude), 
+                        longitudeDelta: 0.0021,
+                        latitudeDelta: 0.0122}}
+                />
+            );
+        }
+        return null;
+    }
+
+    renderActions = (props) => {
+        return <CustomActions {...props} />
+    };
+
 
     componentDidMount() {
         const name = this.props.route.params.username;
@@ -151,12 +221,6 @@ export default class Chat extends React.Component {
                     isConnected: true 
                 });
 
-                this.getMessages();
-                this.renderInputToolbar();
-
-                // reference messages collection in firebase
-                // this.referenceMessages = firebase.firestore().collection('messages');
-
                 // listen to authentication events
                 this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
                     if (!user) { 
@@ -166,10 +230,11 @@ export default class Chat extends React.Component {
                     // update user with active user
                     this.setState({
                         uid: user.uid,
-                        messages: [ ],
+                        messages: [],
                         user: {
                             _id: user.uid,
                             name: name,
+                            avatar: 'https://placeimg.com/140/140/any',
                         },
                         loggedInText: `${this.props.route.params.name} has entered the chat`,
                     });
@@ -216,9 +281,10 @@ export default class Chat extends React.Component {
             <View style={{flex: 1, 
                 backgroundColor: this.props.route.params.backgroundColor }}
             >
-                {/* <View> */}
+               
                     <GiftedChat 
                         messages={this.state.messages}
+                        renderInputToolbar={this.renderInputToolbar.bind(this)}
                         onSend={(messages) => this.onSend(messages)}
                         user={this.state.user}
                         renderBubble={this.renderBubble.bind(this)}
@@ -227,12 +293,22 @@ export default class Chat extends React.Component {
                         alwaysShowSend
                         scrollToBottom
                         inTyping={true}
-                        renderInputToolbar={this.renderInputToolbar.bind(this)}
+                        renderActions={this.renderActions}
+                        renderCustomView={this.renderCustomView}
                     />  
                     { Platform.OS === 'android' ? <KeyboardAvoidingView behavior='height' /> : null }                
-                {/* </View> */}
+    
             </View>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    mapView: {
+        width: 100, 
+        height: 90, 
+        margin: 3,
+        borderRadius: 35,
+    },
+})
 

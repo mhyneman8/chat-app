@@ -7,7 +7,7 @@ import { Icon } from 'react-native-elements';
 // background image
 const image = require('../img/Background.png');
 
-export default class start extends React.Component {
+export default class Start extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
