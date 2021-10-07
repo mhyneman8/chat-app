@@ -19,11 +19,22 @@ This chat app is for mobile devices, built using React Native. This app will pro
 
 ## Deployment
 
-To deploy this project run
+To deploy this project:
 
-```bash
+#### Clone this repository
+git clone https://github.com/mhyneman8/chat-app.git
+
+#### Go to root directory
+cd chat-app
+
+#### Install dependencies
+npm install
+
+Set up a Firestore Database at https://firebase.google.com/. Details on how to set up the database can be found in the Firebase documentation - https://firebase.google.com/docs 
+You will need to replace the firebaseConfig variable in Chat.js with your own database configuration.
+
+#### Run using expo
   expo start
-```
 
   
 ## Features
@@ -37,7 +48,8 @@ To deploy this project run
   
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![ChatScreen Screenshot]('img/ChatScreen.jpg')
+![HomeScreen Screenshot]('img/HomeScreen.jpg')
 
   
 ## Tech Stack
@@ -46,4 +58,18 @@ To deploy this project run
 
 **Server:** Expo, Google Firestore Database, Firebase Cloud Storage
 
-  
+## Dependencies
+* expo
+* expo-image-picker
+* expo-location
+* firebase
+* netinfo
+* prop-types
+* react
+* react-native
+* react-native-async-storage
+* react-native-gifted-chat
+* react-native-gesture-handler
+* react-native-maps
+* react-navigation
+* react-navigation-stcak
